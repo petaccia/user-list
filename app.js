@@ -16,20 +16,31 @@ const users = [
   { id: 8, name: 'Sarah', speciality: 'Books'},
 ];
 
-// app.get('/api/users' , (req , res) => {
-//   res.json(users).status(200);
-// })
 
-app.get('/api/users/:id', (req, res) => {
-  const parsedUsersId = parseInt(req.params.id)
-  const user = users.find((user) => user.id === parsedUsersId);
-  if (user) {
-    res.send(user);
-  } else {
-    res.status(404).send("Not found");
+const newId = 9;
+
+app.get('/api/users' , (req, res) => {
+  res.send(users)
+})
+
+app.use(express.json());
+app.post('/api/users' , (req , res) => {
+  const{ name, speciality} = req.body;
+  const newUser =  {id : newId, name, speciality };
+  if ( name && speciality){
+    users.push(newUser);
+    res.status(201).send(newUser);
+  }else{
+    res.status(400).send('error durring addind user');
   }
-  
 });
+
+
+ 
+
+
+
+
 
 
 app.listen(port, (err) => {

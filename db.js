@@ -12,13 +12,5 @@ const database = mysql.createConnection({
   multipleStatements: true,
   decimalNumbers: true
 });
-database
-  .getConnection()
-  .then(() => {
-    console.log("Can reach database");
-  })
-  .catch((err) => {
-    console.error(err);
-  });
 
 module.exports = database;

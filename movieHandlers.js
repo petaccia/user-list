@@ -1,29 +1,29 @@
 const database = require("./database");
 const movies = [
-  {
-    id: 1,
-    title: "Citizen Kane",
-    director: "Orson Wells",
-    year: "1941",
-    colors: false,
-    duration: 120,
-  },
-  {
-    id: 2,
-    title: "The Godfather",
-    director: "Francis Ford Coppola",
-    year: "1972",
-    colors: true,
-    duration: 180,
-  },
-  {
-    id: 3,
-    title: "Pulp Fiction",
-    director: "Quentin Tarantino",
-    year: "1994",
-    color: true,
-    duration: 180,
-  },
+{
+  id: 1,
+  title: "Citizen Kane",
+  director: "Orson Wells",
+  year: "1941",
+  colors: false,
+  duration: 120,
+},
+{
+  id: 2,
+  title: "The Godfather",
+  director: "Francis Ford Coppola",
+  year: "1972",
+  colors: true,
+  duration: 180,
+},
+{
+  id: 3,
+  title: "Pulp Fiction",
+  director: "Quentin Tarantino",
+  year: "1994",
+  color: true,
+  duration: 180,
+},
 ];
 
 
@@ -99,7 +99,19 @@ const postMovie = (req, res) => {
       console.error(err)
       res.status(500).send("error editing the movie");
     })
- }
+ };
+// route deleteMovies;
+ const deleteMovies = (req, res) => {
+  const id = parseInt(req.params.id);
+  database.query("delete fom movies where id = ?", [id])
+  .then (([result]) => {
+    if (result.affectedRows ===0) {
+      res.status(404).send('not found');
+      }else{
+        res.sendStatus(204);
+      }
+  })
+ };
 
 
 
@@ -111,4 +123,5 @@ module.exports = {
   getMovieById,
   postMovie,
   updateMovie,
+  deleteMovies
 };

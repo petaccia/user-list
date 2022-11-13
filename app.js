@@ -15,18 +15,19 @@ app.get("/api/movies/:id", movieHandlers.getMovieById);
 app.post("/api/movies", movieHandlers.postMovie)
 
 app.put("/api/movies/:id", movieHandlers.updateMovie);
-
+ app.delete("/api/movies/:id", movieHandlers.deleteMovies)
 
 //route users
-const userList = require('./userList');
+const userList = require("./userList");
 
-app.get('/api/users', userList.getUsers);
-app.get('/api/users/id', userList.getUserById);
+app.get("/api/users", userList.getUsers);
+app.get("/api/users/:id", userList.getUserById);
 
-app.post('/api/users', userList.postUsers);
+app.post("/api/users", userList.postUsers);
 
-app.put('/api/users/id', userList.updateUsers);
+app.put("/api/users/:id", userList.updateUsers);
 
+app.delete("/api/users/:id", userList.deleteUsers);
 
 app.listen(port, (err) => {
   if (err) {

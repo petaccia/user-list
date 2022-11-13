@@ -1,20 +1,20 @@
 const database = require("./database");
 const users =[
-{
-  id : 1,
-  firstName:'John',
-  lastName: 'Doe',
-  email: 'john.doe@example.com',
-  city:'Paris',
-  language:'English'
+  {
+    id : 1,
+    firstName:'John',
+    lastName: 'Doe',
+    email: 'john.doe@example.com',
+    city:'Paris',
+    language:'English'
   },
   {
     id: 2,
-  firstName:'Valeriy',
-  lastName:'Appius',
-  email:'valeriy.appius@example.com',
-  city:'Moscow',
-  language:'Russian'
+    firstName:'Valeriy',
+    lastName:'Appius',
+    email:'valeriy.appius@example.com',
+    city:'Moscow',
+    language:'Russian'
   },
   {
     id: 3,
@@ -47,13 +47,22 @@ const users =[
     email:'johanna.martino@example.com',
     city:'Milan',
     language:'Spanish'
-  }
-
-] 
+  },
+  
+];
+console.log(users);
 // route getUsers
-const getUsers = ('/api/users' , (req, res) => {
-  res.send(users)
-});
+const getUsers = (req, res) => {
+  database
+    .query("select * from users")
+    .then(([users]) => {
+      res.json(users);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error retrieving data from database");
+    });
+};
 
 //route getUserById
 function getUserById(req, res) {
@@ -117,11 +126,26 @@ const updateUsers = (req, res) => {
     });
  };
 
+ //route deleteUsers
+ const deleteUsers = (req, res) => {
+  const id = parseInt(req.params.id);
+  database.query("delete fom movies where id = ?", [id])
+  .then (([result]) => {
+    if (result.affectedRows ===0) {
+      res.status(404).send('not found');
+      }else{
+        res.sendStatus(204);
+      }
+  })
+ };
+
+
  module.exports = {
   getUsers,
   getUserById,
   postUsers,
-  updateUsers
+  updateUsers,
+  deleteUsers
 }
 
 

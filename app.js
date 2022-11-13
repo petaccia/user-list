@@ -18,14 +18,16 @@ app.put("/api/movies/:id", movieHandlers.updateMovie);
 
 
 //route users
-const userList = require('./userList')
+const userList = require('./userList');
 
 app.get('/api/users', userList.getUsers);
 app.get('/api/users/id', userList.getUserById);
 
 app.post('/api/users', userList.postUsers);
 
-app.put('/api/users', userList.updateUsers);
+app.put('/api/users/id', userList.updateUsers);
+
+
 app.listen(port, (err) => {
   if (err) {
     console.error("Something bad happened");

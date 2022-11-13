@@ -1,48 +1,31 @@
 require("dotenv").config();
-const { query } = require("express");
 const express = require("express");
 const app = express();
 
 const port = process.env.APP_PORT ?? 3000;
 
-const users = [
-  { id: 1, name: 'Nicolas', speciality: 'Games'},
-  { id: 2, name: 'Guillaume', speciality: 'Books'},
-  { id: 3, name: 'Roger', speciality: 'Films'},
-  { id: 4, name: 'Léo', speciality: 'Games'},
-  { id: 5, name: 'Adam', speciality: 'Games'},
-  { id: 6, name: 'Robin', speciality: 'Books'},
-  { id: 7, name: 'Laure', speciality: 'Sports'},
-  { id: 8, name: 'Sarah', speciality: 'Books'},
-];
-
-
-const newId = 9;
-
-app.get('/api/users' , (req, res) => {
-  res.send(users)
-})
 
 app.use(express.json());
-app.post('/api/users' , (req , res) => {
-  const{ name, speciality} = req.body;
-  const newUser =  {id : newId, name, speciality };
-  if ( name && speciality){
-    users.push(newUser);
-    res.status(201).send(newUser);
-  }else{
-    res.status(400).send('error durring addind user');
-  }
-});
+// route Movies
+const movieHandlers = require("./movieHandlers");
+
+app.get("/api/movies", movieHandlers.getMovies);
+app.get("/api/movies/:id", movieHandlers.getMovieById);
+
+app.post("/api/movies", movieHandlers.postMovie)
+
+app.put("/api/movies/:id", movieHandlers.updateMovie);
 
 
- 
+//route users
+const userList = require('./userList')
 
+app.get('/api/users', userList.getUsers);
+app.get('/api/users/id', userList.getUserById);
 
+app.post('/api/users', userList.postUsers);
 
-
-
-
+app.put('/api/users', userList.updateUsers);
 app.listen(port, (err) => {
   if (err) {
     console.error("Something bad happened");
@@ -50,9 +33,3 @@ app.listen(port, (err) => {
     console.log(`Server is listening on ${port}`);
   }
 });
-
-
-
-
-
-  

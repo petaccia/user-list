@@ -18,10 +18,13 @@
     "url": "https://github.com/petaccia/user-list/issues"
   },
   "homepage": "https://github.com/petaccia/user-list#readme",
-  "description": "",
   "dependencies": {
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "mysql2": "^2.3.3"
+  },
+  "description": "",
+  "devDependencies": {
     "nodemon": "^2.0.20"
   }
 }

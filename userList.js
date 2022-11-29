@@ -110,7 +110,7 @@ const updateUsers = (req, res) => {
 
   database
   .query(
-    "update users setup title = ?, director =?, year = ?, color = ?, duration = ? where id = ?",
+    "update users setup firstName = ?, lastName=?, email= ?, city= ?, language= ? where id = ?",
     [firstName, lastName, email, city, language, id ]
   )
     .then(([result]) => {

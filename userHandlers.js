@@ -1,69 +1,102 @@
 const database = require("./database");
-const users =[
-  {
-    id : 1,
-    firstName:'John',
-    lastName: 'Doe',
-    email: 'john.doe@example.com',
-    city:'Paris',
-    language:'English'
-  },
-  {
-    id: 2,
-    firstName:'Valeriy',
-    lastName:'Appius',
-    email:'valeriy.appius@example.com',
-    city:'Moscow',
-    language:'Russian'
-  },
-  {
-    id: 3,
-    firstName:'Ralf',
-    lastName:'Geronimo',
-    email:'ralf.geronimo@example.com',
-    city:'New York',
-    language:'Italian'
-  },
-  {
-    id: 4,
-    firstName:'Maria',
-    lastName:'Iskandar',
-    email:'maria.iskandar@example.com',
-    city:'New York',
-    language:'German'
-  },
-  {
-    id: 5,
-    firstName:'Jane',
-    lastName:'Doe',
-    email:'jane.doe@example.com',
-    city:'London',
-    language:'English'
-  },
-  {
-    id: 6,
-    firstName:'Johanna',
-    lastName:'Martino',
-    email:'johanna.martino@example.com',
-    city:'Milan',
-    language:'Spanish'
-  },
+// const users =[
+//   {
+//     id : 1,
+//     firstName:'John',
+//     lastName: 'Doe',
+//     email: 'john.doe@example.com',
+//     city:'Paris',
+//     language:'English'
+//   },
+//   {
+//     id: 2,
+//     firstName:'Valeriy',
+//     lastName:'Appius',
+//     email:'valeriy.appius@example.com',
+//     city:'Moscow',
+//     language:'Russian'
+//   },
+//   {
+//     id: 3,
+//     firstName:'Ralf',
+//     lastName:'Geronimo',
+//     email:'ralf.geronimo@example.com',
+//     city:'New York',
+//     language:'Italian'
+//   },
+//   {
+//     id: 4,
+//     firstName:'Maria',
+//     lastName:'Iskandar',
+//     email:'maria.iskandar@example.com',
+//     city:'New York',
+//     language:'German'
+//   },
+//   {
+//     id: 5,
+//     firstName:'Jane',
+//     lastName:'Doe',
+//     email:'jane.doe@example.com',
+//     city:'London',
+//     language:'English'
+//   },
+//   {
+//     id: 6,
+//     firstName:'Johanna',
+//     lastName:'Martino',
+//     email:'johanna.martino@example.com',
+//     city:'Milan',
+//     language:'Spanish'
+//   },
   
-];
-console.log(users);
+// ];
+
 // route getUsers
 const getUsers = (req, res) => {
+  const initialSql = "select * from users";
+  const where = [];
+  if (req.query.language != null) {
+    where.push({
+      column: "language",
+
+      value: req.query.language,
+
+      operator: "=",
+    });
+  }
+
+  if (req.query.city != null) {
+    where.push({
+      column: "city",
+
+      value: req.query.city,
+
+      operator: "=",
+    });
+  }
+
   database
-    .query("select * from users")
+    .query(
+      where.reduce(
+        (sql, { column, operator }, index) =>
+          `${sql} ${index === 0 ? "where" : "and"} ${column} ${operator} ?`,
+
+        initialSql
+      ),
+
+      where.map(({ value }) => value)
+    )
+
     .then(([users]) => {
       res.json(users);
     })
+
     .catch((err) => {
       console.error(err);
+
       res.status(500).send("Error retrieving data from database");
     });
 };
-
 //route getUserById
 function getUserById(req, res) {
   const id = parseInt(req.params.id);
@@ -85,12 +118,12 @@ function getUserById(req, res) {
 
 //route postUsers
 const postUsers = (req, res) => {
-  const {firstName, lastName, email, city, language } = req.body;
+  const {firstname, lastname, email, city, language, hashedPassword} = req.body;
 
     database
     .query(
-      "INSERT INTO movies(firstName, lastName, email, city, language) VALUES (?,?,?,?,?)",
-      [firstName, lastName, email, city, language]
+      "INSERT INTO users(firstname, lastname, email, city, language,hashedPassword) VALUES (?,?,?,?,?,?)",
+      [firstname, lastname, email, city, language,hashedPassword]
       )
       .then(([result]) => {
       res.location(`/api/users/${result.insertId}`).sendStatus(201);

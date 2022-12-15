@@ -2,12 +2,14 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 
-const port = process.env.APP_PORT ?? 3000;
+const port = process.env.APP_PORT || 3000;
 
 
 app.use(express.json());
 // route Movies
 const movieHandlers = require("./movieHandlers");
+const userHandlers = require("./userHandlers");
+const {hashPassword} = require('./auth.js');
 
 app.get("/api/movies", movieHandlers.getMovies);
 app.get("/api/movies/:id", movieHandlers.getMovieById);
@@ -18,16 +20,15 @@ app.put("/api/movies/:id", movieHandlers.updateMovie);
  app.delete("/api/movies/:id", movieHandlers.deleteMovies)
 
 //route users
-const userList = require("./userList");
 
-app.get("/api/users", userList.getUsers);
-app.get("/api/users/:id", userList.getUserById);
+app.get("/api/users", userHandlers.getUsers);
+app.get("/api/users/:id", userHandlers.getUserById);
 
-app.post("/api/users", userList.postUsers);
+app.post("/api/users",hashPassword, userHandlers.postUsers);
 
-app.put("/api/users/:id", userList.updateUsers);
+app.put("/api/users/:id", userHandlers.updateUsers);
 
-app.delete("/api/users/:id", userList.deleteUsers);
+app.delete("/api/users/:id", userHandlers.deleteUsers);
 
 app.listen(port, (err) => {
   if (err) {
